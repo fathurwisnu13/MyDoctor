@@ -8,7 +8,7 @@
     "start": "react-native start",
     "test": "jest",
     "lint": "eslint .",
-    "emulator": "~/AppData/Local/Android/Sdk/emulator/emulator -avd Pixel_3a_API_30_x86"
+    "emulator": "~/AppData/Local/Android/Sdk/emulator/emulator -avd Pixel_3a_API_30_2"
   },
   "dependencies": {
     "@react-native-community/masked-view": "^0.1.11",

@@ -2,6 +2,7 @@ import React from 'react';
 import { ImageBackground, StyleSheet, Text, View } from 'react-native';
 import { ILGetStarted, ILLogo } from '../../assets/illustration';
 import {Button, Gap} from '../../components/';
+import { colors, fonts } from '../../utils';
 
 const GetStarted = ({navigation}) => {
     return (
@@ -16,21 +17,22 @@ const GetStarted = ({navigation}) => {
                 <Button type="secondary" title="Sign In" onPress={() => navigation.replace('Login')}/>
             </View>
         </ImageBackground>
-    )
-}
+    );
+};
 
-export default GetStarted
+export default GetStarted;
 
 const styles = StyleSheet.create({
     page: {
         padding: 40, 
         justifyContent: 'space-between', 
         flex: 1, 
-        backgroundColor: 'white'},
+        backgroundColor: colors.white
+    },
     title: {
         fontSize: 28, 
-        color: 'black', 
+        color: colors.black, 
         marginTop: 215,
-        fontFamily: 'Nunito-SemiBold'
+        fontFamily: fonts.primary[600]
     }
-})
+});
