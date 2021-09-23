@@ -1,23 +1,63 @@
 import React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { Button, Gap, Header, Input } from '../../components';
-import { colors } from '../../utils';
+import { colors, useForm } from '../../utils';
+import {Fire} from '../../config';
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 
 const Register = ({navigation}) => {
+    const [form, setForm] = useForm({
+        fullName: '',
+        profession: '',
+        email: '',
+        password: '',
+    });
+
+    const onContinue = () => {
+        console.log(form);
+        const auth = getAuth(Fire);
+        createUserWithEmailAndPassword(auth, form.email, form.password)
+        .then(success => {
+            console.log('register success: ', success)
+        })
+        .catch((error) => {
+        const errorMessage = error.message;
+        console.log('error register: ', errorMessage)
+    // ..
+  });
+        // navigation.navigate('UploadPhoto')
+    };
     return (
         <View style={styles.page}>
             <Header onPress={() => navigation.goBack()} title="Daftar Akun"/>
             <View style={styles.content}>
                 <ScrollView showsVerticalScrollIndicator={false}> 
-                    <Input label="Full Name"/>
+                    <Input 
+                        label="Full Name" 
+                        value={form.fullName} 
+                        onChangeText={(value) => setForm('fullName', value)} 
+                    />
                     <Gap height={24}/>
-                    <Input label="Pekerjaan"/>
+                    <Input 
+                        label="Pekerjaan" 
+                        value={form.profession} 
+                        onChangeText={(value) => setForm('profession', value)}
+                    />
                     <Gap height={24}/>
-                    <Input label="Email Address"/>
+                    <Input 
+                        label="Email Address" 
+                        value={form.email} 
+                        onChangeText={(value) => setForm('email', value)}
+                    />
                     <Gap height={24}/>
-                    <Input label="Password"/>
+                    <Input 
+                        label="Password" 
+                        value={form.password} 
+                        onChangeText={(value) => setForm('password', value)}
+                        secureTextEntry
+                    />
                     <Gap height={40}/>
-                    <Button title="Continue" onPress={() => navigation.navigate('UploadPhoto')}/>
+                    <Button title="Continue" onPress={onContinue} onChangeText />
                 </ScrollView>
             </View>
 
