@@ -2,28 +2,37 @@ import React, { useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { Button, Gap, Header, Input, Loading } from '../../components';
 import { colors, useForm } from '../../utils';
-import {Fire} from '../../config';
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import { showMessage, hideMessage } from "react-native-flash-message";
+import { Fire } from '../../config';
+import { showMessage } from "react-native-flash-message";
 
 const Register = ({navigation}) => {
     const [form, setForm] = useForm({
         fullName: '',
         profession: '',
         email: '',
-        password: '',
+        password: ''
     });
 
-    const [loading, setLoading] = useState()
+    const [loading, setLoading] = useState();
 
     const onContinue = () => {
         console.log(form);
         setLoading(true);
-        const auth = getAuth(Fire);
-        createUserWithEmailAndPassword( auth, form.email, form.password)
-        .then(success => {
-            setLoading(false);
-            setForm('reset')
+        Fire.auth()
+            .createUserWithEmailAndPassword(form.email, form.password)
+            .then(success => {
+                setLoading(false);
+                setForm('reset');
+                // https://firebase.com/users/i39dw9chd
+                const data = {
+                    fullName: form.fullName,
+                    profession: form.profession,
+                    email: form.email
+                };
+
+            Fire.database()
+                .ref('users/' + success.user.uid + '/')
+                .set(data)
             console.log('register success: ', success)
         })
         .catch((error) => {
