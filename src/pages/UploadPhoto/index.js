@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { IconAddPhoto, IconRemovePhoto, ILNullPhoto } from '../../assets';
 import { Button, Gap, Header, Link } from '../../components';
-import { colors, fonts } from '../../utils';
+import { colors, fonts, storeData } from '../../utils';
 import {launchImageLibrary} from 'react-native-image-picker';
 import { showMessage } from 'react-native-flash-message';
+import { Fire } from '../../config';
 
 const UploadPhoto = ({navigation, route}) => {
-    const {fullName, profession} = route.params
+    const {fullName, profession, uid} = route.params
+    const [photoForDB, setPhotoForDB] = useState('')
     const [hasPhoto, setHasPhoto] = useState(false);
     const [photo, setPhoto] = useState(ILNullPhoto);
     const getImage = () => {
@@ -21,11 +23,27 @@ const UploadPhoto = ({navigation, route}) => {
                     color: colors.white
                 })
             }else{
+                console.log('response getImage: ', response);
                 const source = {uri: response.assets[0].uri};
+
+                setPhotoForDB(`data:${response.assets[0].type};base64, ${response.assets[0].base64} `)
                 setPhoto(source);
                 setHasPhoto(true);
             }
         })
+    }
+
+    const uploadAndContine = () => {
+        Fire.database()
+            .ref('users/' + uid + '/')
+            .update({photo: photoForDB})
+
+            const data = route.params;
+            data.photo = photoForDB;
+
+            storeData('user', data);
+
+        navigation.replace('MainApp')
     }
     return (
         <View style={styles.page}>
@@ -44,7 +62,7 @@ const UploadPhoto = ({navigation, route}) => {
                     <Button 
                         disable={!hasPhoto}
                         title="Upload and Continue" 
-                        onPress={() => navigation.replace('MainApp')}
+                        onPress={uploadAndContine}
                     />
                     <Gap height={30}/>
                     <Link 
