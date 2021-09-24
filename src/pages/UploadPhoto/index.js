@@ -1,26 +1,58 @@
-import React from 'react';
-import { Image, StyleSheet, Text, View } from 'react-native';
-import { IconAddPhoto, ILNullPhoto } from '../../assets';
+import React, { useState } from 'react';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { IconAddPhoto, IconRemovePhoto, ILNullPhoto } from '../../assets';
 import { Button, Gap, Header, Link } from '../../components';
 import { colors, fonts } from '../../utils';
+import {launchImageLibrary} from 'react-native-image-picker';
+import { showMessage } from 'react-native-flash-message';
 
-const UploadPhoto = ({navigation}) => {
+const UploadPhoto = ({navigation, route}) => {
+    const {fullName, profession} = route.params
+    const [hasPhoto, setHasPhoto] = useState(false);
+    const [photo, setPhoto] = useState(ILNullPhoto);
+    const getImage = () => {
+        launchImageLibrary({quality: 0.5, maxWidth: 200, maxHeight: 200 ,includeBase64: true}, response => {
+            console.log('response: ', response);
+            if(response.didCancel || response.errorMessage){
+                showMessage({
+                    message: 'oops, sepertinya anda tidak memilih fotonya?',
+                    type: 'default',
+                    backgroundColor: colors.error,
+                    color: colors.white
+                })
+            }else{
+                const source = {uri: response.assets[0].uri};
+                setPhoto(source);
+                setHasPhoto(true);
+            }
+        })
+    }
     return (
         <View style={styles.page}>
             <Header title="Upload Photo"/>
             <View style={styles.content}>
                 <View style={styles.profile}>
-                    <View style={styles.avatarWrapper}>
-                        <Image source={ILNullPhoto} style={styles.avatar}/>
-                        <IconAddPhoto style={styles.photo} />
-                    </View>
-                    <Text style={styles.name}>Fathur</Text>
-                    <Text style={styles.profession}>Mahasiswa</Text>
+                    <TouchableOpacity style={styles.avatarWrapper} onPress={getImage}>
+                        <Image source={photo} style={styles.avatar}/>
+                        {hasPhoto && <IconRemovePhoto style={styles.addPhoto} />}
+                        {!hasPhoto && <IconAddPhoto style={styles.addPhoto} />}
+                    </TouchableOpacity>
+                    <Text style={styles.name}>{fullName}</Text>
+                    <Text style={styles.profession}>{profession}</Text>
                 </View>
                 <View>
-                    <Button title="Upload and Continue" onPress={() => navigation.replace('MainApp')}/>
+                    <Button 
+                        disable={!hasPhoto}
+                        title="Upload and Continue" 
+                        onPress={() => navigation.replace('MainApp')}
+                    />
                     <Gap height={30}/>
-                    <Link title="Skip for this" align="center" size={16} onPress={() => navigation.replace('MainApp')}/>
+                    <Link 
+                        title="Skip for this" 
+                        align="center" 
+                        size={16} 
+                        onPress={() => navigation.replace('MainApp')}
+                    />
                 </View>
             </View>
         </View>
@@ -56,9 +88,10 @@ const styles = StyleSheet.create({
     },
     avatar: {
         width: 110,
-        height: 110
+        height: 110,
+        borderRadius: 110 / 2
     },
-    photo: {
+    addPhoto: {
         position: 'absolute',
         bottom: 8,
         right: 6

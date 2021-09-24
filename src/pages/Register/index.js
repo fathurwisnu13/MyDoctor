@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { Button, Gap, Header, Input, Loading } from '../../components';
-import { colors, useForm } from '../../utils';
+import { colors, storeData, useForm } from '../../utils';
 import { Fire } from '../../config';
 import { showMessage } from "react-native-flash-message";
 
@@ -23,7 +23,6 @@ const Register = ({navigation}) => {
             .then(success => {
                 setLoading(false);
                 setForm('reset');
-                // https://firebase.com/users/i39dw9chd
                 const data = {
                     fullName: form.fullName,
                     profession: form.profession,
@@ -33,6 +32,9 @@ const Register = ({navigation}) => {
             Fire.database()
                 .ref('users/' + success.user.uid + '/')
                 .set(data)
+
+                storeData('user', data);
+                navigation.navigate('UploadPhoto', data)
             console.log('register success: ', success)
         })
         .catch((error) => {
@@ -46,7 +48,6 @@ const Register = ({navigation}) => {
             })
             console.log('error: ', error)
         });
-        // navigation.navigate('UploadPhoto')
     };
     return (
         <>
