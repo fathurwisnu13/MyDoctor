@@ -8,32 +8,35 @@ import { showMessage } from 'react-native-flash-message';
 import { Fire } from '../../config';
 
 const UploadPhoto = ({navigation, route}) => {
-    const {fullName, profession, uid} = route.params
-    const [photoForDB, setPhotoForDB] = useState('')
+    const {fullName, profession, uid} = route.params;
+    const [photoForDB, setPhotoForDB] = useState('');
     const [hasPhoto, setHasPhoto] = useState(false);
     const [photo, setPhoto] = useState(ILNullPhoto);
     const getImage = () => {
-        launchImageLibrary({quality: 0.5, maxWidth: 200, maxHeight: 200 ,includeBase64: true}, response => {
-            console.log('response: ', response);
-            if(response.didCancel || response.errorMessage){
-                showMessage({
-                    message: 'oops, sepertinya anda tidak memilih fotonya?',
-                    type: 'default',
-                    backgroundColor: colors.error,
-                    color: colors.white
-                })
-            }else{
-                console.log('response getImage: ', response);
-                const source = {uri: response.assets[0].uri};
+        launchImageLibrary(
+            {quality: 0.5, maxWidth: 200, maxHeight: 200 ,includeBase64: true}, 
+            response => {
+                console.log('response: ', response);
+                if(response.didCancel || response.errorMessage){
+                    showMessage({
+                        message: 'oops, sepertinya anda tidak memilih fotonya?',
+                        type: 'default',
+                        backgroundColor: colors.error,
+                        color: colors.white
+                    });
+                }else{
+                    console.log('response getImage: ', response);
+                    const source = {uri: response.assets[0].uri};
 
-                setPhotoForDB(`data:${response.assets[0].type};base64, ${response.assets[0].base64} `)
-                setPhoto(source);
-                setHasPhoto(true);
+                    setPhotoForDB(`data:${response.assets[0].type};base64, ${response.assets[0].base64} `)
+                    setPhoto(source);
+                    setHasPhoto(true);
+                }
             }
-        })
+        )
     }
 
-    const uploadAndContine = () => {
+    const uploadAndContinue = () => {
         Fire.database()
             .ref('users/' + uid + '/')
             .update({photo: photoForDB})
@@ -62,7 +65,7 @@ const UploadPhoto = ({navigation, route}) => {
                     <Button 
                         disable={!hasPhoto}
                         title="Upload and Continue" 
-                        onPress={uploadAndContine}
+                        onPress={uploadAndContinue}
                     />
                     <Gap height={30}/>
                     <Link 

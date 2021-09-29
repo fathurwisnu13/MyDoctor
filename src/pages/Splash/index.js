@@ -2,13 +2,23 @@ import React, { useEffect } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { ILLogo } from '../../assets/illustration';
 import { colors, fonts } from '../../utils';
+import { Fire } from '../../config';
 
 const Splash = ({navigation}) => {
     useEffect( ()=> {
         setTimeout(() => {
-            navigation.replace('GetStarted')
-        }, 3000)
-    }, [navigation])
+            Fire.auth().onAuthStateChanged((user) => {
+                if(user){
+                    // user lagi login
+                    console.log('user: ', user);
+                    navigation.replace('MainApp');
+                } else {
+                    // user logout
+                    navigation.replace('GetStarted');
+                }
+            });
+        }, 3000);
+    }, [navigation]);
 
     return (
         <View style={styles.page}>
@@ -18,7 +28,7 @@ const Splash = ({navigation}) => {
     )
 }
 
-export default Splash
+export default Splash;
 
 const styles = StyleSheet.create({
     page: {
