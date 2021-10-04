@@ -47,7 +47,7 @@ const Router = () => {
     return(
         <Stack.Navigator initialRouteName="Splash">
             <Stack.Screen 
-                name="Splash" 
+                name="Splash"
                 component={Splash}
                 options={{headerShown: false}} 
             />

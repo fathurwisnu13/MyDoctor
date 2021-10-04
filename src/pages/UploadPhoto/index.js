@@ -2,9 +2,8 @@ import React, { useState } from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { IconAddPhoto, IconRemovePhoto, ILNullPhoto } from '../../assets';
 import { Button, Gap, Header, Link } from '../../components';
-import { colors, fonts, storeData } from '../../utils';
+import { colors, fonts, showError, storeData } from '../../utils';
 import {launchImageLibrary} from 'react-native-image-picker';
-import { showMessage } from 'react-native-flash-message';
 import { Fire } from '../../config';
 
 const UploadPhoto = ({navigation, route}) => {
@@ -16,38 +15,31 @@ const UploadPhoto = ({navigation, route}) => {
         launchImageLibrary(
             {quality: 0.5, maxWidth: 200, maxHeight: 200 ,includeBase64: true}, 
             response => {
-                console.log('response: ', response);
                 if(response.didCancel || response.errorMessage){
-                    showMessage({
-                        message: 'oops, sepertinya anda tidak memilih fotonya?',
-                        type: 'default',
-                        backgroundColor: colors.error,
-                        color: colors.white
-                    });
+                    showError('oops, sepertinya anda tidak memilih foto nya?')
                 }else{
-                    console.log('response getImage: ', response);
                     const source = {uri: response.assets[0].uri};
 
-                    setPhotoForDB(`data:${response.assets[0].type};base64, ${response.assets[0].base64} `)
+                    setPhotoForDB(`data:${response.assets[0].type};base64, ${response.assets[0].base64} `);
                     setPhoto(source);
                     setHasPhoto(true);
                 }
             }
-        )
-    }
+        );
+    };
 
     const uploadAndContinue = () => {
         Fire.database()
             .ref('users/' + uid + '/')
             .update({photo: photoForDB})
 
-            const data = route.params;
-            data.photo = photoForDB;
+        const data = route.params;
+        data.photo = photoForDB;
 
-            storeData('user', data);
+        storeData('user', data);
 
         navigation.replace('MainApp')
-    }
+    };
     return (
         <View style={styles.page}>
             <Header title="Upload Photo"/>
