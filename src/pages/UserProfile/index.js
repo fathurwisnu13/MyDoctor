@@ -1,37 +1,32 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import {Gap, Header, List, Profile} from '../../components';
-import { colors, getData, showError } from '../../utils';
-import {ILNullPhoto} from '../../assets';
+import { colors, showError } from '../../utils';
 import { Fire } from '../../config';
 
-const UserProfile = ({navigation}) => {
-    const [profile, setProfile] = useState({
-        fullName: '',
-        profession: '',
-        photo: ILNullPhoto
-    });
-    useEffect(() => {
-        getData('user').then(res => {
-            const data = res;
-            data.photo = {uri: res.photo};
-            setProfile(data);
-        });
-    }, []);
+const UserProfile = ({navigation, route}) => {
+    const profile = route.params;
 
     const signOut = () => {
-        Fire.auth().signOut().then(() => {
-            navigation.replace('GetStarted');
-        }).catch(err =>{
-            showError(err.message);
-        });
+        Fire.auth()
+            .signOut()
+            .then(() => {
+                navigation.replace('GetStarted');
+            })
+            .catch(err =>{
+                showError(err.message);
+            });
     };
     return (
         <View style={styles.page}>
             <Header title="Profile" onPress={() => navigation.goBack()}/>
             <Gap height={10}/>
             {profile.fullName.length > 0 && (
-                <Profile name={profile.fullName} desc={profile.profession} photo={profile.photo}/>
+                <Profile 
+                    name={profile.fullName} 
+                    desc={profile.profession} 
+                    photo={profile.photo}
+                />
             )}
             <Gap height={14}/>
             <List 

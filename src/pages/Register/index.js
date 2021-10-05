@@ -33,9 +33,8 @@ const Register = ({navigation}) => {
                     .set(data)
 
                 storeData('user', data);
-                navigation.navigate('UploadPhoto', data)
-            }
-        )
+                navigation.navigate('UploadPhoto', data);
+            })
         .catch((err) => {
             dispatch({type: 'SET_LOADING', value: false});
             showError(err.message)

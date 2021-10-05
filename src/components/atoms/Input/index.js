@@ -5,10 +5,10 @@ import { colors, fonts } from '../../../utils';
 const Input = ({label, value, onChangeText, secureTextEntry, disable}) => {
     const [border, setBorder] = useState(colors.border);
     const onFocusForm = () => {
-        setBorder(colors.tertiary)
+        setBorder(colors.tertiary);
     };
     const onBlurForm = () => {
-        setBorder(colors.border)
+        setBorder(colors.border);
     };
     return (
         <View>
@@ -30,14 +30,12 @@ const Input = ({label, value, onChangeText, secureTextEntry, disable}) => {
 export default Input;
 
 const styles = StyleSheet.create({
-    input : (border) => (
-        {
+    input : (border) => ({
             borderWidth: 1,
             borderColor: border,
             borderRadius: 10,
             padding: 12
-        }
-    ),
+    }),
     label : {
         fontSize: 16,
         color: colors.text.secondary,

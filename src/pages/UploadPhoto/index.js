@@ -15,12 +15,12 @@ const UploadPhoto = ({navigation, route}) => {
         launchImageLibrary(
             {quality: 0.5, maxWidth: 200, maxHeight: 200 ,includeBase64: true}, 
             response => {
-                if(response.didCancel || response.errorMessage){
-                    showError('oops, sepertinya anda tidak memilih foto nya?')
-                }else{
+                if (response.didCancel || response.errorMessage){
+                    showError('oops, sepertinya anda tidak memilih foto nya?');
+                } else {
                     const source = {uri: response.assets[0].uri};
 
-                    setPhotoForDB(`data:${response.assets[0].type};base64, ${response.assets[0].base64} `);
+                    setPhotoForDB(`data:${response.assets[0].type};base64, ${response.assets[0].base64}`);
                     setPhoto(source);
                     setHasPhoto(true);
                 }
@@ -38,7 +38,7 @@ const UploadPhoto = ({navigation, route}) => {
 
         storeData('user', data);
 
-        navigation.replace('MainApp')
+        navigation.replace('MainApp');
     };
     return (
         <View style={styles.page}>
