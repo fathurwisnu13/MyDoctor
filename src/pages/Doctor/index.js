@@ -47,7 +47,9 @@ const Doctor = ({navigation}) => {
             .then(res => {
                 console.log('category doctor', res.val());
                 if(res.val()){
-                    setCategoryDoctor(res.val());
+                    const data = res.val();
+                    const filterData = data.filter(el => el !== null);
+                    setCategoryDoctor(filterData);
                 }
             })
             .catch(err => {
@@ -60,9 +62,11 @@ const Doctor = ({navigation}) => {
             .ref('news/')
             .once('value')
             .then(res => {
-                console.log('data', res.val());
                 if(res.val()){
-                    setNews(res.val());
+                    const data = res.val();
+                    const filterData = data.filter(el => el !== null);
+                    console.log('data news filter: ', filterData)
+                    setNews(filterData);
                 }
             })
             .catch(err => {
@@ -84,7 +88,7 @@ const Doctor = ({navigation}) => {
                                 <Gap width={32}/>
                                 {
                                     categoryDoctor.map(item => {
-                                        return <DoctorCategory key={item.id} category={item.category} onPress={() => navigation.navigate('ChooseDoctor')}/>
+                                        return <DoctorCategory key={`category-${item.id}`} category={item.category} onPress={() => navigation.navigate('ChooseDoctor', item)}/>
                                     })
                                 }
                                 <Gap width={22}/>
@@ -99,7 +103,7 @@ const Doctor = ({navigation}) => {
                                 name={doctor.data.fullName}
                                 desc={doctor.data.profession} 
                                 avatar={{uri: doctor.data.photo}} 
-                                onPress={() => navigation.navigate("DoctorProfile") } 
+                                onPress={() => navigation.navigate("DoctorProfile", doctor) } 
                             />
 
                         })}
@@ -107,7 +111,7 @@ const Doctor = ({navigation}) => {
                     </View>
                     {news.map(item => {
                         return <NewsItem
-                            key={item.id} 
+                            key={`news-${item.id}`} 
                             title={item.title} 
                             date={item.date} 
                             image={item.image}
