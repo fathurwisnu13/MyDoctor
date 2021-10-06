@@ -4,15 +4,15 @@ import { DummyDoctor5 } from '../../../assets';
 import { colors, fonts } from '../../../utils';
 
 
-const Others = () => {
+const Others = ({text, date, photo}) => {
     return (
         <View style={styles.container}>
-            <Image source={DummyDoctor5} style={styles.avatar}/>
+            <Image source={photo} style={styles.avatar}/>
             <View>
                 <View style={styles.chatContent}>
-                    <Text style={styles.text}>Ibu dokter, apakah memakan jeruk tiap hari itu buruk?</Text>
+                    <Text style={styles.text}>{text}</Text>
                 </View>
-                <Text style={styles.date}>4.20 AM</Text>
+                <Text style={styles.date}>{date}</Text>
             </View>
         </View>
     );
